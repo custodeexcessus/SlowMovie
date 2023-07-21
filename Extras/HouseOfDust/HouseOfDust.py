@@ -100,6 +100,11 @@ inhabitants = [
     'PEOPLE WHO LOVE TO READ',
     ]
 
+ruleCount = 8
+
+tab = '   '
+lineSpacing = 2
+
 while 1:
     color = (55, 65, 65)
 
@@ -110,14 +115,9 @@ while 1:
     # font = ImageFont.truetype("dotmatrix.TTF", 24)
 
     font = ImageFont.truetype('daisywhl.otf', 28)
-    ruleCount = 8
-
-    tab = '   '
     tabSize = font.getsize(tab)[0]  # six spaces for a tab
     lineHeight = font.getsize('M')[1]
     charWidth = font.getsize('M')[0]
-    lineSpacing = 2
-
     ruleHeight = lineHeight * lineSpacing / ruleCount
     rules = int(size[1] / ruleHeight)
     for x in range(rules):
@@ -137,11 +137,12 @@ while 1:
 
     for x in range(4):
         x_text = 20
-        text = ['A HOUSE OF ' + material[x]]
-        text.append(location[x])
-        text.append('USING ' + light_source[x])
-        text.append('INHABITED BY ' + inhabitants[x])
-
+        text = [
+            f'A HOUSE OF {material[x]}',
+            location[x],
+            f'USING {light_source[x]}',
+            f'INHABITED BY {inhabitants[x]}',
+        ]
         for line in text:
             columns = int((size[0] - x_text) / charWidth)
             lines = textwrap.wrap(line, width=columns, replace_whitespace=False)
