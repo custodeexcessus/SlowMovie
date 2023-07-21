@@ -1,0 +1,5 @@
+{
+    "image_folder_path": "images",
+    "current_frame_file": "current_frame.txt",
+    "frame_rate": 24
+}
