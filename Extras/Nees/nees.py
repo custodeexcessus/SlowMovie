@@ -54,7 +54,7 @@ while 1:
     d = ImageDraw.Draw(img)
 
     def clip(val, min_, max_):
-        return (min_ if val < min_ else (max_ if val > max_ else val))
+        return min_ if val < min_ else min(val, max_)
 
     if type == 0:
         for x in range(0, gridX):

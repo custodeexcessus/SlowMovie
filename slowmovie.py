@@ -164,7 +164,7 @@ def get_next_video(viddir, currentVideo=None):
     if currentVideo:
         nextIndex = videos.index(currentVideo) + 1
         # If we're not wrapping around
-        if not nextIndex >= len(videos):
+        if nextIndex < len(videos):
             return os.path.join(viddir, videos[nextIndex])
     # Wrapping around or no current video: return first video
     return os.path.join(viddir, videos[0])
@@ -172,8 +172,7 @@ def get_next_video(viddir, currentVideo=None):
 
 # Returns a random video from the videos directory
 def get_random_video(viddir):
-    videos = list(filter(supported_filetype, os.listdir(viddir)))
-    if videos:
+    if videos := list(filter(supported_filetype, os.listdir(viddir))):
         return os.path.join(viddir, random.choice(videos))
 
 
@@ -186,25 +185,22 @@ def estimate_runtime(delay, increment, frames, all=False):
     days = hours / 24
 
     if all:
-        output = f"{seconds:.1f} second(s) / {minutes:.1f} minute(s) / {hours:.1f} hour(s) / {days:.2f} day(s)"
+        return f"{seconds:.1f} second(s) / {minutes:.1f} minute(s) / {hours:.1f} hour(s) / {days:.2f} day(s)"
+    elif minutes < 1:
+        return f"{seconds:.1f} second(s)"
+    elif hours < 1:
+        return f"{minutes:.1f} minute(s)"
+    elif days < 1:
+        return f"{hours:.1f} hour(s)"
     else:
-        if minutes < 1:
-            output = f"{seconds:.1f} second(s)"
-        elif hours < 1:
-            output = f"{minutes:.1f} minute(s)"
-        elif days < 1:
-            output = f"{hours:.1f} hour(s)"
-        else:
-            output = f"{days:.2f} day(s)"
-
-    return output
+        return f"{days:.2f} day(s)"
 
 
 # Check for a matching subtitle file
 def find_subtitles(file):
     if args.subtitles:
         name, _ = os.path.splitext(file)
-        for i in glob.glob(name + ".*"):
+        for i in glob.glob(f"{name}.*"):
             _, ext = os.path.splitext(i)
             if ext.lower() in subtitle_fileTypes:
                 logger.debug(f"Found subtitle file '{i}'")
@@ -277,10 +273,7 @@ width = epd.width
 height = epd.height
 
 # Set path of Videos directory and logs directory. Videos directory can be specified by CLI --directory
-if args.directory:
-    viddir = args.directory
-else:
-    viddir = "Videos"
+viddir = args.directory if args.directory else "Videos"
 progressdir = "progress"
 
 # Create progress and Videos directories if missing
